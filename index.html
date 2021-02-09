@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Draw a message</title>
+  <script src="lib/react.development.js"></script>
+  <script src="lib/react-dom.development.js"></script>
+
+
+  <script src="lib/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+  class App extends React.Component {
+      state = {
+        inputValue: "",
+        isAddedOmenShown: false,
+        drawedNumber: "",
+        omens: [
+          "First msg",
+          "Second msg",
+          "Third msg"
+        ]
+      }
+
+      handleClick = () => {
+        const drawedNumber = Math.floor(Math.random() * this.state.omens.length)
+
+        const omen = this.state.omens[drawedNumber]
+        //console.log(omen)
+
+        this.setState({
+          omen,
+          drawedNumber: drawedNumber
+        })
+      }
+
+      handleFormSubmit = (e) => {
+        e.preventDefault()
+
+        const omens = this.state.omens.concat(this.state.inputValue)
+
+        this.setState({
+          omens: omens,
+          isAddedOmenShown: true,
+          inputValue: ""
+        })
+
+        let popup = omens.map(omen => (" " + omen))
+        alert("Current messages: " + popup)
+      }
+
+      handleInputChange = (e) => {
+        this.setState({
+          inputValue: e.target.value
+        })
+      }
+
+      showAddedOmen = () => (
+        this.state.isAddedOmenShown ? <h4>Lastest message: {this.state.omens[this.state.omens.length - 1]}</h4> : null
+      )
+
+      showDrawedOmen = () => {
+        const msg = this.state.drawedNumber === "" ? "Click the button to see message" : this.state.omens[this.state.drawedNumber]
+
+        return <h4>Your message: {msg}</h4>
+      }
+
+      render() {
+        return (
+          <div>
+            <button onClick={this.handleClick}>Draw message</button>
+            {this.showDrawedOmen()}
+            <form onSubmit={this.handleFormSubmit}> <br /> <br />
+              <input type="text" value={this.state.inputValue} onChange={this.handleInputChange} /> <br /> <br />
+              <button>Add message</button>
+            </form>
+
+            {this.showAddedOmen()}
+          </div>
+        )
+      }
+    }
+
+
+    ReactDOM.render(<App />, document.getElementById('root'))
+
+  </script>
+
+</body>
+
+</html>
